@@ -1,0 +1,11 @@
+browser/
+docs/
+examples/
+samples/
+test/
+.gitignore
+.jshintrc
+.travis.yml
+bower.json
+gulpfile.js
+RELEASE_NOTES.md

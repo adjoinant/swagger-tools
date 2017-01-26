@@ -107,7 +107,7 @@ var send400 = function (req, res, next, err) {
 
   return next(err);
 };
-var validateValue = function (req, schema, path, val, location, callback) {
+var validateValue = function (req, schema, path, val, location, formatValidator, callback) {
   var document = req.swagger.apiDeclaration || req.swagger.swaggerObject;
   var version = req.swagger.apiDeclaration ? '1.2' : '2.0';
   var isModel = mHelpers.isModelParameter(version, schema);
@@ -116,7 +116,7 @@ var validateValue = function (req, schema, path, val, location, callback) {
   val = mHelpers.convertValue(val, schema, mHelpers.getParameterType(schema), location);
 
   try {
-    validators.validateSchemaConstraints(version, schema, path, val);
+    validators.validateSchemaConstraints(version, schema, path, val, formatValidator);
   } catch (err) {
     return callback(err);
   }
@@ -140,7 +140,7 @@ var validateValue = function (req, schema, path, val, location, callback) {
                                                     schema.type), aVal, oCallback);
       } else {
         try {
-          validators.validateAgainstSchema(schema.schema ? schema.schema : schema, val);
+          validators.validateAgainstSchema(schema.schema ? schema.schema : schema, val, formatValidator);
 
           oCallback();
         } catch (err) {
@@ -169,7 +169,7 @@ var validateValue = function (req, schema, path, val, location, callback) {
     callback();
   }
 };
-var wrapEnd = function (req, res, next) {
+var wrapEnd = function (req, res, next, formatValidator) {
   var operation = req.swagger.operation;
   var originalEnd = res.end;
   var vPath = _.cloneDeep(req.swagger.operationPath);
@@ -281,7 +281,7 @@ var wrapEnd = function (req, res, next) {
       if (_.isUndefined(schema)) {
         sendData(swaggerVersion, res, val, encoding, true);
       } else {
-        validateValue(req, schema, vPath, val, 'body', function (err) {
+        validateValue(req, schema, vPath, val, 'body', formatValidator, function (err) {
           if (err) {
             throw err;
           }
@@ -376,7 +376,7 @@ exports = module.exports = function (options) {
                       return oCallback();
                     }
 
-                    validateValue(req, schema, paramPath, val, pLocation, oCallback);
+                    validateValue(req, schema, paramPath, val, pLocation, options.formatValidator, oCallback);
 
                     paramIndex++;
                   }, function (err) {
