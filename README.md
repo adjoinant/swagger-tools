@@ -1,3 +1,13 @@
+This fork adds the following simple functionality: 
+* option to pass in custom format-validator, so finer-grain formatting of 
+primitive types, such as 'Email' or 'BitcoinAddress', can be validated. The
+format-validator should have the following shape:
+{
+    Email: {
+        validate: (x) => boolean
+    },...
+} 
+
 The project provides various tools for integrating and interacting with Swagger.  This project is in its infancy but
 what is within the repository should be fully tested and reusable.  Please visit the [issue tracker][project-issues] to
 see what issues we are aware of and what features/enhancements we are working on.  Otherwise, feel free to review the
