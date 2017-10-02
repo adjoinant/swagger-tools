@@ -1,6 +1,6 @@
 {
   "name": "ell-fork-swagger-tools",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "description": "Fork of apigee swagger-tools: various tools for using and integrating with Swagger.",
   "main": "index.js",
   "scripts": {
